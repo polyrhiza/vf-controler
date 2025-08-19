@@ -190,6 +190,8 @@ class LightCalculator():
                 green_text = f', {round((self.green - self.green_blue_leak_intercept) / self.green_blue_leak_slope, 2)} umol/m2/s from Green leak'
                 blue_text += green_text
 
+            print(blue_text)
+
         # BLUE PRINT IF BLUE IS == 0
         if self.blue is None or self.blue == 0:
             blue_text = f'Blue output (input: {self.blue}): {round(self.blue_output, 2)} umol/m2/s'
