@@ -60,6 +60,17 @@ class LightCalculator():
         self.blue_input = 0
         self.fr_input = 0
 
+        #####################################################
+        #                  TEXT STORAGE                     #
+        #####################################################
+        self.blue_text = None
+        self.green_text = None
+        self.red_text = None
+        self.fr_text = None
+
+        #####################################################
+        #                  FIG STORAGE                      #
+        #####################################################
         self.figure, self.ax = plt.subplots(figsize=(5, 4))
 
         self.input_or_output()
@@ -155,55 +166,53 @@ class LightCalculator():
 
         # RED PRINT IF RED != 0
         if self.red is not None and self.red != 0:
-            red_text = f'Red output (input: {self.red}): {round(self.red_output, 2)} umol/m2/s'
+            self.red_text = f'Red output (input: {self.red}): {round(self.red_output, 2)} umol/m2/s'
 
             if self.green is not None and self.green != 0:
                 green_text = f', {round((self.green - self.green_red_leak_intercept) / self.green_red_leak_slope, 2)} umol/m2/s from Green leak'
-                red_text += green_text
+                self.red_text += green_text
 
             if self.fr is not None and self.fr != 0:
                 fr_text = f', {round((self.fr - self.fr_red_leak_intercept) / self.fr_red_leak_slope, 2)} umol/m2/s from Far Red leak'
-                red_text += fr_text
+                self.red_text += fr_text
 
-            print(red_text)
+
 
         # RED PRINT IF RED == 0 THIS IS THE SAME AS ABOVE... COULD OPTIMISE THIS SOMEHOW BUT GONNA LEAVE IT FOR NOW
         if self.red is None or self.red == 0:
 
-            red_text = f'Red output (input: {self.red}): {round(self.red_output, 2)} umol/m2/s'
+            self.red_text = f'Red output (input: {self.red}): {round(self.red_output, 2)} umol/m2/s'
 
             if self.green is not None and self.green != 0:
                 green_text = f', {round((self.green - self.green_red_leak_intercept) / self.green_red_leak_slope, 2)} umol/m2/s from Green leak'
-                red_text += green_text
+                self.red_text += green_text
 
             if self.fr is not None and self.fr != 0:
                 fr_text = f', {round((self.fr - self.fr_red_leak_intercept) / self.fr_red_leak_slope, 2)} umol/m2/s from Far Red leak'
-                red_text += fr_text
+                self.red_text += fr_text
 
-            print(red_text)
 
         # BLUE PRINT IF BLUE IS != 0
         if self.blue is not None and self.blue != 0:
-            blue_text = f'Blue output (input: {self.blue}): {round(self.blue_output, 2)} umol/m2/s'
+            self. blue_text = f'Blue output (input: {self.blue}): {round(self.blue_output, 2)} umol/m2/s'
 
             if self.green is not None and self.green != 0:
                 green_text = f', {round((self.green - self.green_blue_leak_intercept) / self.green_blue_leak_slope, 2)} umol/m2/s from Green leak'
-                blue_text += green_text
+                self.blue_text += green_text
 
-            print(blue_text)
 
         # BLUE PRINT IF BLUE IS == 0
         if self.blue is None or self.blue == 0:
-            blue_text = f'Blue output (input: {self.blue}): {round(self.blue_output, 2)} umol/m2/s'
+            self.blue_text = f'Blue output (input: {self.blue}): {round(self.blue_output, 2)} umol/m2/s'
 
             if self.green is not None and self.green != 0:
                 green_text = f', {round((self.green - self.green_blue_leak_intercept) / self.green_blue_leak_slope, 2)} umol/m2/s from Green leak'
-                blue_text += green_text
+                self.blue_text += green_text
 
-            print(blue_text)
 
-        print(f'Green output (input: {self.green}):', round(self.green_output, 2), 'umol/m2/s')
-        print(f'Far Red out (input: {self.fr}):', round(self.fr_output, 2), 'umol/m2/s')
+
+        self.green_text = f'Green output (input: {self.green}): {round(self.green_output, 2)} umol/m2/s'
+        self.fr_text = f'Far Red out (input: {self.fr}): {round(self.fr_output, 2)} umol/m2/s'
 
     #######################################################################################################
     #######################################################################################################

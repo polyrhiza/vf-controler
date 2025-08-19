@@ -80,6 +80,14 @@ class OverrideLights(QDialog):
         self.plot_layout = QVBoxLayout()
         self.plot_widget.setLayout(self.plot_layout)
 
+        #######################################
+        #           TEXT WIDGETS              #
+        #######################################
+        self.blue_text = QLabel()
+        self.green_text = QLabel()
+        self.red_text = QLabel()
+        self.fr_text = QLabel()
+
         #######################
         # MAIN LAYOUT SETTING #
         #######################
@@ -90,6 +98,10 @@ class OverrideLights(QDialog):
         main_layout.addWidget(self.input_output_changeable_label)
         main_layout.addWidget(light_channel_input_widget)
         main_layout.addWidget(self.plot_widget)
+        main_layout.addWidget(self.blue_text)
+        main_layout.addWidget(self.green_text)
+        main_layout.addWidget(self.red_text)
+        main_layout.addWidget(self.fr_text)
         main_layout.addStretch(1)
         self.setLayout(main_layout)
 
@@ -132,7 +144,14 @@ class OverrideLights(QDialog):
 
         canvas = FigureCanvas(light_calc.figure)
         self.plot_layout.addWidget(canvas)
+        # WORK ON THIS
+        canvas.figure.patch.set_facecolor('none')
         canvas.draw()
+
+        self.blue_text.setText(light_calc.blue_text)
+        self.green_text.setText(light_calc.green_text)
+        self.red_text.setText(light_calc.red_text)
+        self.fr_text.setText(light_calc.fr_text)
 
 app = QApplication(sys.argv)
 window = OverrideLights()
