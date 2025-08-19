@@ -1,0 +1,4 @@
+paramiko
+PySide6
+ipaddress
+matplotlib
