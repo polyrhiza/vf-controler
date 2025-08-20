@@ -10,6 +10,7 @@ import sys
 from connect import Connect
 from connectionMSG import connectionFailed, connectionSecured
 import ipaddress
+from override_lights import OverrideLights
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -65,12 +66,12 @@ class MainWindow(QMainWindow):
 
         # CALL VALIDATE_HOST BEFORE PASSING TO PARAMIKO
         if self.validate_host(ip = self.host):
-            client = paramiko.client.SSHClient()
-            client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+            self.client = paramiko.client.SSHClient()
+            self.client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
             try:
-                client.connect(hostname=self.host, username=self.username, password=self.password)
-                self.shell = client.invoke_shell()
+                self.client.connect(hostname=self.host, username=self.username, password=self.password)
+                self.shell = self.client.invoke_shell()
 
                 print('Connection Secured')
 
@@ -100,9 +101,11 @@ class MainOptionsLayout(QWidget):
         super().__init__()
 
         layout = QGridLayout()
-
+        # OVERRIDE LIGHTS BUTTON AND CONNECT
         override_lights_button = QPushButton('Override Lights')
         override_lights_button.setMinimumSize(150,150)
+
+        override_lights_button.clicked.connect(lambda: OverrideLights(client=main_window.client).exec())
 
         scheduler_button = QPushButton('Scheduler')
         scheduler_button.setMinimumSize(150,150)

@@ -339,6 +339,9 @@ class LightCalculator():
         if self.fr is not None and self.fr != 0:
             self.fr_text = f'<b>Far Red input for specified value ({self.fr} umol/m2/s):</b> {self.fr_input}'
 
+        if self.fr is None or self.fr == 0:
+            self.fr_text = f'<b>Far Red input for specified value ({self.fr} umol/m2/s):</b> {self.fr_input}'
+
 
         # RED PRINT OUT IF SELF.RED != 0
         if self.red is not None and self.red != 0:
