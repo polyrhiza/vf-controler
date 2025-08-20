@@ -8,7 +8,7 @@ import paramiko
 # import pyqtgraph as pg
 
 class OverrideLights(QDialog):
-    def __init__(self, client=None):
+    def __init__(self, shell=None):
         super().__init__()
 
         self.setWindowTitle('Set Override Lights')
@@ -28,7 +28,7 @@ class OverrideLights(QDialog):
         #          PARAMIKO CLIENT            #
         #######################################
 
-        self.client = client
+        self.shell = shell
 
         # SETTING LAYOUT
 
@@ -109,7 +109,7 @@ class OverrideLights(QDialog):
         #        SET OVERRIDE BUTTON          #
         #######################################
         self.set_override_button =  QPushButton('Override')
-        self.set_override_button.clicked.connect(lambda: self.override(self.client, self.blue, self.green, self.red, self.fr))
+        self.set_override_button.clicked.connect(lambda: self.override(self.shell, self.blue, self.green, self.red, self.fr))
         self.set_override_button.setVisible(False)
 
         #######################
@@ -205,10 +205,15 @@ class OverrideLights(QDialog):
             self.blue = light_calc.blue_input
             self.green = light_calc.green_input
             self.red = light_calc.red_input
-            self.fr = light_calc.fr_input
+            self.fr = light_calc.fr
 
-    def override(self,client, blue, green, red, fr):
-        stdin, stdout, stderr = client.exec_commdnad(f'lights override set 2.2 [{blue},{green},{red},{fr}]')
+    def override(self,shell, blue, green, red, fr):
+        self.shell.send(f'lights override-set 2.2 [{int(red)},{int(green)},{int(blue)},{int(fr)}, 0]' + '\n')
+        print(f'lights override-set 2.2 [{red},{green},{blue},{fr}, 0]' + '\n')
+        if self.shell.recv_ready():
+            output = self.shell.recv(4096).decode()
+            print(output)
+
 
 # app = QApplication(sys.argv)
 # window = OverrideLights()

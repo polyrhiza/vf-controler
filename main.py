@@ -105,7 +105,7 @@ class MainOptionsLayout(QWidget):
         override_lights_button = QPushButton('Override Lights')
         override_lights_button.setMinimumSize(150,150)
 
-        override_lights_button.clicked.connect(lambda: OverrideLights(client=main_window.client).exec())
+        override_lights_button.clicked.connect(lambda: OverrideLights(shell=main_window.shell).exec())
 
         scheduler_button = QPushButton('Scheduler')
         scheduler_button.setMinimumSize(150,150)
