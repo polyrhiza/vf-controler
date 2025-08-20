@@ -1,8 +1,10 @@
 import sys
 from PySide6.QtWidgets import QDialog, QSlider, QHBoxLayout, QVBoxLayout, QLabel, QApplication, QComboBox, QWidget,\
     QLineEdit, QPushButton, QDoubleSpinBox, QSizePolicy
+from PySide6.QtCore import Qt
 from light_calculator import LightCalculator
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+import paramiko
 # import pyqtgraph as pg
 
 class OverrideLights(QDialog):
@@ -12,6 +14,16 @@ class OverrideLights(QDialog):
         self.setWindowTitle('Set Override Lights')
 
         self.setMinimumSize(500,500)
+
+        #######################################
+        #  INPUT OUTPUT VALUES FOR PARAMIKO   #
+        #######################################
+
+        self.blue = None
+        self.green = None
+        self.red = None
+        self.fr = None
+
 
         # SETTING LAYOUT
 
@@ -88,6 +100,13 @@ class OverrideLights(QDialog):
         self.red_text = QLabel()
         self.fr_text = QLabel()
 
+        #######################################
+        #        SET OVERRIDE BUTTON          #
+        #######################################
+        self.set_override_button =  QPushButton('Override')
+        self.set_override_button.clicked.connect(lambda: self.override(self.blue, self.green, self.red, self.fr))
+        self.set_override_button.setVisible(False)
+
         #######################
         # MAIN LAYOUT SETTING #
         #######################
@@ -102,6 +121,7 @@ class OverrideLights(QDialog):
         main_layout.addWidget(self.green_text)
         main_layout.addWidget(self.red_text)
         main_layout.addWidget(self.fr_text)
+        main_layout.addWidget(self.set_override_button)
         main_layout.addStretch(1)
         self.setLayout(main_layout)
 
@@ -142,16 +162,48 @@ class OverrideLights(QDialog):
         for i in reversed(range(self.plot_layout.count())):
             self.plot_layout.itemAt(i).widget().setParent(None)
 
+        # SETTING UP FIGURE CANVAS AND MAKING IT WHITE
         canvas = FigureCanvas(light_calc.figure)
-        self.plot_layout.addWidget(canvas)
-        # WORK ON THIS
-        canvas.figure.patch.set_facecolor('none')
-        canvas.draw()
+        canvas.setStyleSheet("background:transparent;")
+        canvas.setAttribute(Qt.WA_TranslucentBackground, True)
+        canvas.figure.patch.set_alpha(0)
+        canvas.figure.axes[0].patch.set_alpha(0)
+        canvas.figure.axes[0].title.set_color("white")
+        canvas.figure.axes[0].xaxis.label.set_color("white")
+        canvas.figure.axes[0].yaxis.label.set_color("white")
+        canvas.figure.axes[0].tick_params(colors="white")
+        ax = canvas.figure.axes[0]
+        for spine in ax.spines.values():  # axis borders
+            spine.set_edgecolor("white")
 
+        canvas.draw()
+        self.plot_layout.addWidget(canvas)
+
+        # UPDATING TEXT QLABEL WIDGETS
         self.blue_text.setText(light_calc.blue_text)
         self.green_text.setText(light_calc.green_text)
         self.red_text.setText(light_calc.red_text)
         self.fr_text.setText(light_calc.fr_text)
+
+        # SET OVERRIDE BUTTON VISIBLE
+        self.set_override_button.setVisible(True)
+
+        # STORING VALUES
+        # THIS IS AS PER THE STARTING IF STATEMENT SO IF == INPUT THEN WE ARE CALCULATING OUTPUT
+        if input_output == 'input':
+            self.blue = blue
+            self.green = green
+            self.red = red
+            self.fr = fr
+
+        if input_output== 'output':
+            self.blue = light_calc.blue_input
+            self.green = light_calc.green_input
+            self.red = light_calc.red_input
+            self.fr = light_calc.fr_input
+
+    def override(self, blue, green, red, fr):
+        print(blue, green, red, fr)
 
 app = QApplication(sys.argv)
 window = OverrideLights()

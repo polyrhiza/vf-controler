@@ -166,7 +166,7 @@ class LightCalculator():
 
         # RED PRINT IF RED != 0
         if self.red is not None and self.red != 0:
-            self.red_text = f'Red output (input: {self.red}): {round(self.red_output, 2)} umol/m2/s'
+            self.red_text = f'<b>Red output (input: {self.red}):</b> {round(self.red_output, 2)} umol/m2/s'
 
             if self.green is not None and self.green != 0:
                 green_text = f', {round((self.green - self.green_red_leak_intercept) / self.green_red_leak_slope, 2)} umol/m2/s from Green leak'
@@ -181,7 +181,7 @@ class LightCalculator():
         # RED PRINT IF RED == 0 THIS IS THE SAME AS ABOVE... COULD OPTIMISE THIS SOMEHOW BUT GONNA LEAVE IT FOR NOW
         if self.red is None or self.red == 0:
 
-            self.red_text = f'Red output (input: {self.red}): {round(self.red_output, 2)} umol/m2/s'
+            self.red_text = f'<b>Red output (input: {self.red}):</b> {round(self.red_output, 2)} umol/m2/s'
 
             if self.green is not None and self.green != 0:
                 green_text = f', {round((self.green - self.green_red_leak_intercept) / self.green_red_leak_slope, 2)} umol/m2/s from Green leak'
@@ -194,7 +194,7 @@ class LightCalculator():
 
         # BLUE PRINT IF BLUE IS != 0
         if self.blue is not None and self.blue != 0:
-            self. blue_text = f'Blue output (input: {self.blue}): {round(self.blue_output, 2)} umol/m2/s'
+            self. blue_text = f'<b>Blue output (input: {self.blue}):</b> {round(self.blue_output, 2)} umol/m2/s'
 
             if self.green is not None and self.green != 0:
                 green_text = f', {round((self.green - self.green_blue_leak_intercept) / self.green_blue_leak_slope, 2)} umol/m2/s from Green leak'
@@ -203,7 +203,7 @@ class LightCalculator():
 
         # BLUE PRINT IF BLUE IS == 0
         if self.blue is None or self.blue == 0:
-            self.blue_text = f'Blue output (input: {self.blue}): {round(self.blue_output, 2)} umol/m2/s'
+            self.blue_text = f'<b>Blue output (input: {self.blue}):</b> {round(self.blue_output, 2)} umol/m2/s'
 
             if self.green is not None and self.green != 0:
                 green_text = f', {round((self.green - self.green_blue_leak_intercept) / self.green_blue_leak_slope, 2)} umol/m2/s from Green leak'
@@ -211,8 +211,8 @@ class LightCalculator():
 
 
 
-        self.green_text = f'Green output (input: {self.green}): {round(self.green_output, 2)} umol/m2/s'
-        self.fr_text = f'Far Red out (input: {self.fr}): {round(self.fr_output, 2)} umol/m2/s'
+        self.green_text = f'<b>Green output (input: {self.green}):</b> {round(self.green_output, 2)} umol/m2/s'
+        self.fr_text = f'<b>Far Red out (input: {self.fr}):</b> {round(self.fr_output, 2)} umol/m2/s'
 
     #######################################################################################################
     #######################################################################################################
@@ -332,15 +332,13 @@ class LightCalculator():
 
         # GREEN PRINT OUT
         if self.green is not None and self.green != 0:
-            green_text = f'Green input for specified value({self.green} umol/m2/s): {self.green_input}'
+            self.green_text = f'<b>Green input for specified value({self.green} umol/m2/s):</b> {self.green_input}'
 
-            print(green_text)
 
         # FAR RED PRINT OUT
         if self.fr is not None and self.fr != 0:
-            fr_text = f'Far Red input for specified value ({self.fr} umol/m2/s): {self.fr_input}'
+            self.fr_text = f'<b>Far Red input for specified value ({self.fr} umol/m2/s):</b> {self.fr_input}'
 
-            print(fr_text)
 
         # RED PRINT OUT IF SELF.RED != 0
         if self.red is not None and self.red != 0:
@@ -348,32 +346,29 @@ class LightCalculator():
             if self.red_input < 0:
                 self.red_input = 0
 
-            red_text = f'Red input for specified value ({self.red} umol/m2/s): {self.red_input}'
+            self.red_text = f'<b>Red input for specified value ({self.red} umol/m2/s):</b> {self.red_input}'
 
             if self.green is not None and self.green != 0:
                 green_red_leak_text = f', {round((self.green_input - self.green_red_leak_intercept) / self.green_red_leak_slope, 2)} umol/m2/s from Green leak'
-                red_text += green_red_leak_text
+                self.red_text += green_red_leak_text
 
             if self.fr is not None and self.fr != 0:
                 fr_red_leak_text = f', {round((self.fr_input - self.fr_red_leak_intercept) / self.fr_red_leak_slope, 2)} umol/m2/s from Far Red leak'
-                red_text += fr_red_leak_text
-
-            print(red_text)
+                self.red_text += fr_red_leak_text
 
         # RED PRINT OUT IF IT IS 0
         if self.red is None or self.red == 0:
 
-            red_text = f'Red input for specified value ({self.red} umol/m2/s): {self.red_input}'
+            self.red_text = f'<b>Red input for specified value ({self.red} umol/m2/s):</b> {self.red_input}'
 
             if self.green is not None and self.green != 0:
                 green_red_leak_text = f', {round((self.green_input - self.green_red_leak_intercept) / self.green_red_leak_slope, 2)} umol/m2/s from Green leak'
-                red_text += green_red_leak_text
+                self.red_text += green_red_leak_text
 
             if self.fr is not None and self.fr != 0:
                 fr_red_leak_text = f', {round((self.fr_input - self.fr_red_leak_intercept) / self.fr_red_leak_slope, 2)} umol/m2/s from Far Red leak'
-                red_text += fr_red_leak_text
+                self.red_text += fr_red_leak_text
 
-            print(red_text)
 
         # BLUE PRINT OUT IF SELF.BLUE != 0
         if self.blue is not None and self.blue != 0:
@@ -381,23 +376,20 @@ class LightCalculator():
             if self.blue_input < 0:
                 self.blue_input = 0
 
-            blue_text = f'Blue input for specified value ({self.blue} umol/m2/s): {self.blue_input}'
+            self.blue_text = f'<b>Blue input for specified value ({self.blue} umol/m2/s):</b> {self.blue_input}'
 
             if self.green is not None and self.green != 0:
                 green_blue_leak_text = f', {round((self.green_input - self.green_blue_leak_intercept) / self.green_blue_leak_slope, 2)} umol/m2/s from Green leak'
-                blue_text += green_blue_leak_text
-
-            print(blue_text)
+                self.blue_text += green_blue_leak_text
 
         if self.blue is None or self.blue == 0:
 
-            blue_text = f'Blue input for specified value ({self.blue} umol/m2/s): {self.blue_input}'
+            self.blue_text = f'<b>Blue input for specified value ({self.blue} umol/m2/s):</b> {self.blue_input}'
 
             if self.green is not None and self.green != 0:
                 green_blue_leak_text = f', {round((self.green_input - self.green_blue_leak_intercept) / self.green_blue_leak_slope, 2)} umol/m2/s from Green leak'
-                blue_text += green_blue_leak_text
+                self.blue_text += green_blue_leak_text
 
-            print(blue_text)
 
     #######################################
     #             PLOTTING                #
