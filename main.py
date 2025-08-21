@@ -11,6 +11,7 @@ from connect import Connect
 from connectionMSG import connectionFailed, connectionSecured
 import ipaddress
 from override_lights import OverrideLights
+from fans import FansMainWindow
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -101,6 +102,7 @@ class MainOptionsLayout(QWidget):
         super().__init__()
 
         layout = QGridLayout()
+
         # OVERRIDE LIGHTS BUTTON AND CONNECT
         override_lights_button = QPushButton('Override Lights')
         override_lights_button.setMinimumSize(150,150)
@@ -110,8 +112,11 @@ class MainOptionsLayout(QWidget):
         scheduler_button = QPushButton('Scheduler')
         scheduler_button.setMinimumSize(150,150)
 
+        # FANS
         fans_button = QPushButton('Fans')
         fans_button.setMinimumSize(150,150)
+
+        fans_button.clicked.connect(lambda: FansMainWindow(shell=main_window.shell).exec())
 
         layout.addWidget(override_lights_button, 1,1)
         layout.addWidget(scheduler_button, 1,2)
