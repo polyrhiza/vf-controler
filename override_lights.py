@@ -41,7 +41,7 @@ class OverrideLights(QDialog):
         self.input_output_combo_box = QComboBox()
         self.input_output_combo_box.addItem('Output')
         self.input_output_combo_box.addItem('Input')
-        self.input_output_combo_box.currentTextChanged.connect(self.update_spinbox_limits)
+        self.input_output_combo_box.currentTextChanged.connect(self.UpdateSpinboxText)
 
         # SELECT CANAL COMBO BOX
         self.canal_combo_box = QComboBox()
@@ -125,16 +125,29 @@ class OverrideLights(QDialog):
         self.fr_text = QLabel()
 
         #######################################
-        #        SET OVERRIDE BUTTON          #
+        #      OVERRIDE BUTTON WIDGET         #
         #######################################
+        override_button_widget = QWidget()
+        override_button_layout = QHBoxLayout()
+
+
+
+        # SET OVERRIDE LIGHTS BUTTON
         self.set_override_button =  QPushButton('Override')
-        self.set_override_button.clicked.connect(lambda: self.override(shell=self.shell,
-                                                                       blue=self.blue,
-                                                                       green=self.green,
-                                                                       red=self.red,
-                                                                       fr=self.fr,
+        self.set_override_button.clicked.connect(lambda: self.Override(shell=self.shell, blue=self.blue,
+                                                                       green=self.green, red=self.red, fr=self.fr,
                                                                        canal=self.canal_combo_box.currentText()))
         self.set_override_button.setVisible(False)
+
+        # CLEAR OVERRIDE BUTTON
+        self.clear_override_button = QPushButton('Clear Override')
+        self.clear_override_button.clicked.connect(lambda: self.ClearOverride(shell=self.shell,
+                                                                              canal=self.canal_combo_box.currentText()))
+        self.clear_override_button.setVisible(False)
+
+        override_button_layout.addWidget(self.set_override_button)
+        override_button_layout.addWidget(self.clear_override_button)
+        override_button_widget.setLayout(override_button_layout)
 
         #######################
         # MAIN LAYOUT SETTING #
@@ -150,11 +163,11 @@ class OverrideLights(QDialog):
         main_layout.addWidget(self.green_text)
         main_layout.addWidget(self.red_text)
         main_layout.addWidget(self.fr_text)
-        main_layout.addWidget(self.set_override_button)
+        main_layout.addWidget(override_button_widget)
         main_layout.addStretch(1)
         self.setLayout(main_layout)
 
-    def update_spinbox_limits(self, text):
+    def UpdateSpinboxText(self, text):
 
         if text == 'Output':
             self.input_output_changeable_label.setText('Enter Inputs (Hex):')
@@ -216,6 +229,7 @@ class OverrideLights(QDialog):
 
         # SET OVERRIDE BUTTON VISIBLE
         self.set_override_button.setVisible(True)
+        self.clear_override_button.setVisible(True)
 
         # STORING VALUES
         # THIS IS AS PER THE STARTING IF STATEMENT SO IF == INPUT THEN WE ARE CALCULATING OUTPUT
@@ -231,13 +245,17 @@ class OverrideLights(QDialog):
             self.red = light_calc.red_input
             self.fr = light_calc.fr
 
-    def override(self,shell=None, blue=None, green=None, red=None, fr=None, canal=None):
-        self.shell.send(f'lights override-set {canal} [{int(red)},{int(green)},{int(blue)},{int(fr)}, 0]' + '\n')
+    def Override(self, shell=None, blue=None, green=None, red=None, fr=None, canal=None):
+        shell=shell
+        shell.send(f'lights override-set {canal} [{int(red)},{int(green)},{int(blue)},{int(fr)}, 0]' + '\n')
 
         if self.shell.recv_ready():
             output = self.shell.recv(4096).decode()
             print(output)
 
+    def ClearOverride(self,shell=None, canal=None):
+        shell = shell
+        shell.send(f'lights override-clear {canal}' + '\n')
 
 # app = QApplication(sys.argv)
 # window = OverrideLights()

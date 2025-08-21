@@ -118,9 +118,14 @@ class MainOptionsLayout(QWidget):
 
         fans_button.clicked.connect(lambda: FansMainWindow(shell=main_window.shell).exec())
 
+        # SHOW ALL CONFIGS
+        show_button = QPushButton('Show')
+        show_button.setMinimumSize(150,150)
+
         layout.addWidget(override_lights_button, 1,1)
         layout.addWidget(scheduler_button, 1,2)
         layout.addWidget(fans_button, 2,1)
+        layout.addWidget(show_button, 2,2)
 
 
         self.setLayout(layout)
