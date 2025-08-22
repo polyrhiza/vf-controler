@@ -78,7 +78,7 @@ class FansMainWindow(QDialog):
         self.setLayout(main_layout)
 
     def SetFans(self,shell=None, fan_speed=None, canal=None):
-        fan_speed = fan_speed.strip('%', '')
+        fan_speed = fan_speed.strip('%')
         canal=canal
         self.shell.send(f'fans set {canal} {canal}' + '\n')
 
