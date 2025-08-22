@@ -4,7 +4,8 @@
 ###########################################
 
 import paramiko
-from PySide6.QtWidgets import QApplication, QPushButton, QMessageBox, QWidget, QMainWindow, QVBoxLayout, QGridLayout
+from PySide6.QtWidgets import (QApplication, QPushButton, QMessageBox, QWidget,
+                               QMainWindow, QVBoxLayout, QGridLayout, QHBoxLayout, QFileDialog)
 from PySide6.QtCore import QSize, Qt
 import sys
 from connect import Connect
@@ -13,7 +14,9 @@ import ipaddress
 from override_lights import OverrideLights
 from fans import FansMainWindow
 
+
 class MainWindow(QMainWindow):
+
     def __init__(self):
         super().__init__()
 
@@ -28,11 +31,10 @@ class MainWindow(QMainWindow):
         self.client = None
         self.shell = None
 
-        self.setMinimumSize(500,500)
+        self.setMinimumSize(500, 500)
 
         # INITIALISING INITIAL LAYOUT
         self.set_connect_layout()
-
 
     def set_connect_layout(self):
         self.connect_layout = ConnectLayout(self.open_connect)
@@ -42,7 +44,6 @@ class MainWindow(QMainWindow):
         self.main_options_layout = MainOptionsLayout()
         self.setCentralWidget(self.main_options_layout)
         self.resize(self.main_options_layout.sizeHint())
-
 
     def open_connect(self):
         connectDialog = Connect()
@@ -66,7 +67,7 @@ class MainWindow(QMainWindow):
     def ssh_connect(self):
 
         # CALL VALIDATE_HOST BEFORE PASSING TO PARAMIKO
-        if self.validate_host(ip = self.host):
+        if self.validate_host(ip=self.host):
             self.client = paramiko.client.SSHClient()
             self.client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
@@ -92,6 +93,7 @@ class MainWindow(QMainWindow):
             connect_fail2 = connectionFailed()
             connect_fail2.exec()
 
+
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 #                           EDITING LAYOUTS                               #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
@@ -105,28 +107,27 @@ class MainOptionsLayout(QWidget):
 
         # OVERRIDE LIGHTS BUTTON AND CONNECT
         override_lights_button = QPushButton('Override Lights')
-        override_lights_button.setMinimumSize(150,150)
+        override_lights_button.setMinimumSize(150, 150)
 
         override_lights_button.clicked.connect(lambda: OverrideLights(shell=main_window.shell).exec())
 
         scheduler_button = QPushButton('Scheduler')
-        scheduler_button.setMinimumSize(150,150)
+        scheduler_button.setMinimumSize(150, 150)
 
         # FANS
         fans_button = QPushButton('Fans')
-        fans_button.setMinimumSize(150,150)
+        fans_button.setMinimumSize(150, 150)
 
         fans_button.clicked.connect(lambda: FansMainWindow(shell=main_window.shell).exec())
 
         # SHOW ALL CONFIGS
         show_button = QPushButton('Show')
-        show_button.setMinimumSize(150,150)
+        show_button.setMinimumSize(150, 150)
 
-        layout.addWidget(override_lights_button, 1,1)
-        layout.addWidget(scheduler_button, 1,2)
-        layout.addWidget(fans_button, 2,1)
-        layout.addWidget(show_button, 2,2)
-
+        layout.addWidget(override_lights_button, 1, 1)
+        layout.addWidget(scheduler_button, 1, 2)
+        layout.addWidget(fans_button, 2, 1)
+        layout.addWidget(show_button, 2, 2)
 
         self.setLayout(layout)
 
@@ -137,21 +138,40 @@ class ConnectLayout(QWidget):
         super().__init__()
 
         open_connect = open_connect
-        layout = QVBoxLayout()
+        layout = QHBoxLayout()
 
-        connect_button = QPushButton('Connect to VF')
-        connect_button.setMinimumSize(200,200)
+        connect_button = QPushButton('New Connection')
+        connect_button.setMinimumSize(200, 200)
         connect_button.clicked.connect(open_connect)
 
-        layout.addWidget(connect_button, alignment=Qt.AlignCenter)
+        open_save_button = QPushButton('Open')
+        open_save_button.setMinimumSize(200, 200)
+        open_save_button.clicked.connect(self.LoadSSH)
+
+        layout.addWidget(connect_button)
+        layout.addWidget(open_save_button)
         self.setLayout(layout)
+
+    def LoadSSH(self):
+        open_file_widget = QWidget()
+
+        file_path, _ = QFileDialog.getOpenFileName(open_file_widget,
+                                                   "Open a Saved SSH server",
+                                                   "",
+                                                   "Text Files (*.txt)")
+
+        if file_path:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                lines = f.readlines()
+
+        main_window.host = lines[0].strip()
+        main_window.username = lines[1].strip()
+        main_window.password = lines[3].strip()
+
+        main_window.ssh_connect()
+
 
 app = QApplication(sys.argv)
 main_window = MainWindow()
 main_window.show()
 sys.exit(app.exec())
-
-
-
-
-

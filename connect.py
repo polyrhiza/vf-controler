@@ -81,9 +81,9 @@ class Connect(QDialog):
     def save_ssh(self, host=None, usr=None, pwd=None):
         save_name_dialog = HostNameSaveWindow()
         if save_name_dialog.exec() == QDialog.Accepted:
-            save_text = save_name_dialog.GetText()
+            save_text = save_name_dialog.GetText() + '.txt'
 
-            save_dir = os.path.expanduser('~/vf-ssh-saves')
+            save_dir = os.path.expanduser('vf-ssh-saves')
             file_path = os.path.join(save_dir, save_text)
 
             os.makedirs(save_dir, exist_ok=True)
