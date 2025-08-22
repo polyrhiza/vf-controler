@@ -80,7 +80,7 @@ class FansMainWindow(QDialog):
     def SetFans(self,shell=None, fan_speed=None, canal=None):
         fan_speed = fan_speed.strip('%')
         canal=canal
-        self.shell.send(f'fans set {canal} {canal}' + '\n')
+        self.shell.send(f'fans set {canal} {fan_speed}' + '\n')
 
         if self.shell.recv_ready():
             output = self.shell.recv(4096).decode()
