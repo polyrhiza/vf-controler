@@ -166,7 +166,7 @@ class ConnectLayout(QWidget):
 
         main_window.host = lines[0].strip()
         main_window.username = lines[1].strip()
-        main_window.password = lines[3].strip()
+        main_window.password = lines[2].strip()
 
         main_window.ssh_connect()
 
