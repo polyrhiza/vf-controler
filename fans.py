@@ -82,6 +82,10 @@ class FansMainWindow(QDialog):
         canal=canal
         self.shell.send(f'fans set {canal} {canal}' + '\n')
 
+        if self.shell.recv_ready():
+            output = self.shell.recv(4096).decode()
+            print(output)
+
 
 
 
