@@ -90,8 +90,6 @@ class OverrideLights(QDialog):
         self.fr_input.setSingleStep(1.0)
         self.fr_input.setMaximum(255.0)
 
-
-
         set_button = QPushButton('Set')
         set_button.clicked.connect(self.calculate)
 
