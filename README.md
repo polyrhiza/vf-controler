@@ -21,3 +21,4 @@ Current Functions:
 - Calculate total light output (um/m2/s) in each channel using DMX energy values.
 - Calculate DMX energy values needed to produced desired light recipie
 - Adjust fan speed in all canals.
+- Add scheduled light recipes for all canals.
