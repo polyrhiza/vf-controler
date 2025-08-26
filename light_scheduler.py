@@ -1,5 +1,5 @@
 import sys
-from PySide6.QtWidgets import (QDialog, QSlider, QHBoxLayout, QVBoxLayout, QLabel, QApplication, QComboBox, QWidget,
+from PySide6.QtWidgets import (QDialog, QHBoxLayout, QVBoxLayout, QLabel, QApplication, QComboBox, QWidget,
                                QPushButton, QDoubleSpinBox)
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from PySide6.QtCore import Qt
@@ -11,7 +11,7 @@ class SchedulerMainWindow(QDialog):
 
         self.setWindowTitle('Scheduler')
 
-        self.setMinimumSize(500, 500)
+        self.setMinimumSize(500, 825)
 
         #######################################
         #  INPUT OUTPUT VALUES FOR PARAMIKO   #
@@ -304,7 +304,7 @@ class SchedulerMainWindow(QDialog):
             print(output)
 
 
-app = QApplication(sys.argv)
-window = SchedulerMainWindow()
-window.show()
-sys.exit(app.exec())
+# app = QApplication(sys.argv)
+# window = SchedulerMainWindow()
+# window.show()
+# sys.exit(app.exec())
