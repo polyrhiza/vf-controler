@@ -13,6 +13,7 @@ from connectionMSG import connectionFailed, connectionSecured
 import ipaddress
 from override_lights import OverrideLights
 from fans import FansMainWindow
+from scheduler import SchedulerMainWindow
 
 
 class MainWindow(QMainWindow):
@@ -113,6 +114,10 @@ class MainOptionsLayout(QWidget):
 
         scheduler_button = QPushButton('Scheduler')
         scheduler_button.setMinimumSize(150, 150)
+
+        scheduler_button.clicked.connect(lambda: SchedulerMainWindow(shell=main_window.shell).exec())
+
+
 
         # FANS
         fans_button = QPushButton('Fans')
