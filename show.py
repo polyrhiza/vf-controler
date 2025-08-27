@@ -86,6 +86,7 @@ class ShowMainWindow(QDialog):
                 last_seen_command_idx = i+1
 
         cleaned_output = output_lines[last_seen_command_idx:]
+        cleaned_output = "\n".join(cleaned_output)
         print(cleaned_output)
 
 
