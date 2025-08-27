@@ -1,6 +1,7 @@
 import sys
 from PySide6.QtWidgets import (QDialog, QHBoxLayout, QVBoxLayout, QLabel, QApplication, QComboBox, QWidget,
                                QPushButton, QTextEdit)
+import time
 
 class ShowMainWindow(QDialog):
     def __init__(self, shell=None):
@@ -72,10 +73,26 @@ class ShowMainWindow(QDialog):
 
         if self.shell.recv_ready():
             output = self.shell.recv(4096).decode()
+            time.sleep(0.1)
             print(output)
 
+        # CLEAN THE OUTPUT
+        output_lines = output.splitlines()
+        cleaned_output = []
+        last_seen_command_idx = 0
+
+        for i, line in enumerate(output_lines):
+            if show_item in line:
+                last_seen_command_idx = i+1
+
+        cleaned_output = output_lines[last_seen_command_idx:]
+        print(cleaned_output)
+
+
+
+
         # SET SHOW_OUTPUT AS THE OUTPUT OF THE SHELL
-        self.show_output.setText(output)
+        self.show_output.setText(cleaned_output)
 
 
 # app = QApplication(sys.argv)
