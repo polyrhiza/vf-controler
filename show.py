@@ -39,7 +39,6 @@ class ShowMainWindow(QDialog):
 
         #######################################
         #             THIRD ROW               #
-        #            OUTPUT PRINT             #
         #######################################
 
         # SECOND ROW IS IN MAIN LAYOUT AND IS THE TEXT OUTPUT
@@ -72,7 +71,7 @@ class ShowMainWindow(QDialog):
         self.show_output.setText(output)
 
 
-app = QApplication(sys.argv)
-window = ShowMainWindow()
-window.show()
-sys.exit(app.exec())
+# app = QApplication(sys.argv)
+# window = ShowMainWindow()
+# window.show()
+# sys.exit(app.exec())
