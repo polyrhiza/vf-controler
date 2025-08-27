@@ -10,7 +10,7 @@ class ShowMainWindow(QDialog):
 
         self.setMinimumSize(500, 500)
 
-        shell = shell
+        self.shell = shell
 
         #######################################
         #             FIRST ROW               #
@@ -29,7 +29,7 @@ class ShowMainWindow(QDialog):
         what_to_show_combo_box.addItem('Command History')
 
         show_button = QPushButton('Show')
-        show_button.clicked.connect(lambda: self.Show(shell=shell, show_item=what_to_show_combo_box.currentText()))
+        show_button.clicked.connect(lambda: self.Show(show_item=what_to_show_combo_box.currentText()))
 
         first_row_layout.addWidget(what_to_show_text)
         first_row_layout.addWidget(what_to_show_combo_box)
@@ -59,13 +59,20 @@ class ShowMainWindow(QDialog):
 
         self.setLayout(main_layout)
 
-    def Show(self, shell=None, show_item=None):
+    def Show(self, show_item=None):
 
+        show_item = show_item.lower()
 
-        shell.send(f'show {show_item}' + '\n')
+        if show_item == "light schedules":
+            show_item = "scheduler lights"
 
-        if shell.recv_ready():
-            output = shell.recv(4096).decode()
+        if show_item == "command history":
+            show_item = "history show"
+
+        self.shell.send(f'{show_item} show' + '\n')
+
+        if self.shell.recv_ready():
+            output = self.shell.recv(4096).decode()
             print(output)
 
         # SET SHOW_OUTPUT AS THE OUTPUT OF THE SHELL
