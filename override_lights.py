@@ -244,7 +244,7 @@ class OverrideLights(QDialog):
             self.fr = light_calc.fr
 
     def Override(self, shell=None, blue=None, green=None, red=None, fr=None, canal=None):
-        shell = shell
+
         shell.send(f'lights override-set {canal} [{int(red)},{int(green)},{int(blue)},{int(fr)}, 0]' + '\n')
 
         if self.shell.recv_ready():
@@ -252,7 +252,7 @@ class OverrideLights(QDialog):
             print(output)
 
     def ClearOverride(self,shell=None, canal=None):
-        shell = shell
+
         shell.send(f'lights override-clear {canal}' + '\n')
 
 # app = QApplication(sys.argv)
