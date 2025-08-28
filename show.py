@@ -2,6 +2,8 @@ import sys
 from PySide6.QtWidgets import (QDialog, QHBoxLayout, QVBoxLayout, QLabel, QApplication, QComboBox, QWidget,
                                QPushButton, QTextEdit)
 import time
+import re
+
 
 class ShowMainWindow(QDialog):
     def __init__(self, shell=None):
@@ -44,7 +46,6 @@ class ShowMainWindow(QDialog):
 
         # SECOND ROW IS IN MAIN LAYOUT AND IS THE TEXT OUTPUT
 
-
         #######################################
         #            MAIN LAYOUT              #
         #######################################
@@ -83,18 +84,18 @@ class ShowMainWindow(QDialog):
 
         for i, line in enumerate(output_lines):
             if show_item in line:
-                last_seen_command_idx = i+1
+                last_seen_command_idx = i + 1
 
         cleaned_output = output_lines[last_seen_command_idx:]
         cleaned_output = "\n".join(cleaned_output)
-        print(cleaned_output)
 
-
-
+        # STRIP ANSI CODES
+        ansi_codes = re.compile(r'(?:\x1B[@-_][0-?]*[ -/]*[@-~])')
+        final_output = ansi_codes.sub('', cleaned_output)
+        print(final_output)
 
         # SET SHOW_OUTPUT AS THE OUTPUT OF THE SHELL
-        self.show_output.setText(cleaned_output)
-
+        self.show_output.setText(final_output)
 
 # app = QApplication(sys.argv)
 # window = ShowMainWindow()
