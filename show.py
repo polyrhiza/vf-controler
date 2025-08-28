@@ -79,7 +79,7 @@ class ShowMainWindow(QDialog):
         marker = ">"
         while True:
             if self.shell.recv_ready():
-                output += self.shell.recv(4096).decode(erros='ignore')
+                output += self.shell.recv(4096).decode(errors='ignore')
                 time.sleep(0.1)
 
                 lines = output.splitlines()
