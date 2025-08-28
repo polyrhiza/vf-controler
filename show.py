@@ -29,7 +29,7 @@ class ShowMainWindow(QDialog):
         what_to_show_combo_box.addItem('Lights')
         what_to_show_combo_box.addItem('Fans')
         what_to_show_combo_box.addItem('Nozzles')
-        what_to_show_combo_box.addItem('Command History')
+        # what_to_show_combo_box.addItem('Command History')
 
         show_button = QPushButton('Show')
         show_button.clicked.connect(lambda: self.Show(show_item=what_to_show_combo_box.currentText()))
@@ -73,29 +73,49 @@ class ShowMainWindow(QDialog):
         print(show_item)
         print(f'{show_item} show' + '\n')
 
+        while self.shell.recv_ready():
+            self.shell.recv(4096)
+
         self.shell.send(f'{show_item} show' + '\n')
 
         output = ''
-        marker = ">"
+        marker = '>'
+        command_echoed = False
         start_time = time.time()
-        timeout = 5
-        while True:
-            if self.shell.recv_ready():
-                output += self.shell.recv(4096).decode(errors='ignore')
-                time.sleep(0.1)
+        timeout = 15
+        quiet_period = 0.1
+        last_recv_time = time.time()
+        full_command = f'{show_item} show'
 
-                lines = output.splitlines()
-                if lines and lines[-1].strip().endswith(marker):
-                    print(f'Found > in line: {lines}')
+        while True:
+            # Read everything currently available
+            while self.shell.recv_ready():
+                chunk = self.shell.recv(4096).decode(errors='ignore')
+                output += chunk
+                last_recv_time = time.time()
+                time.sleep(0.01)
+
+            # Detect if the command has appeared in the output
+            if not command_echoed and full_command in output:
+                # Strip everything up to and including the echoed command
+                echo_index = output.find(full_command)
+                output = output[echo_index + len(full_command):]
+                command_echoed = True
+
+            # Break if prompt appears somewhere in output after command and quiet period passed
+            if command_echoed and marker in output:
+                if time.time() - last_recv_time > quiet_period:
+                    print(f'Found prompt after command')
                     break
 
-            elif time.time() - start_time > timeout:
+            if time.time() - start_time > timeout:
                 print("Timeout waiting for shell")
                 break
-            else:
-                time.sleep(0.1)
 
+            time.sleep(0.05)
 
+        print("Raw Output:\n", output)
+        print('End Raw Output')
         # CLEAN THE OUTPUT
         output_lines = output.splitlines()
         cleaned_output = []
@@ -115,6 +135,9 @@ class ShowMainWindow(QDialog):
 
         # SET SHOW_OUTPUT AS THE OUTPUT OF THE SHELL
         self.show_output.setText(final_output)
+
+        while self.shell.recv_ready():
+            self.shell.recv(4096)
 
 # app = QApplication(sys.argv)
 # window = ShowMainWindow()
