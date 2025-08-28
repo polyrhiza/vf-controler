@@ -77,14 +77,21 @@ class ShowMainWindow(QDialog):
 
         output = ''
         marker = ">"
+        start_time = time.time()
+        timeout = 5
         while True:
             if self.shell.recv_ready():
                 output += self.shell.recv(4096).decode(errors='ignore')
                 time.sleep(0.1)
 
                 lines = output.splitlines()
-                if lines and lines[-1].endswith(marker):
+                if lines and lines[-1].strip().endswith(marker):
+                    print(f'Found > in line: {lines}')
                     break
+
+            elif time.time() - start_time > timeout:
+                print("Timeout waiting for shell")
+                break
             else:
                 time.sleep(0.1)
 
