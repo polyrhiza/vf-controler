@@ -68,14 +68,21 @@ class ShowMainWindow(QDialog):
             show_item = "scheduler lights"
 
         if show_item == "command history":
-            show_item = "history show"
+            show_item = "history"
+
+        print(show_item)
+        print(f'{show_item} show' + '\n')
 
         self.shell.send(f'{show_item} show' + '\n')
 
-        if self.shell.recv_ready():
-            output = self.shell.recv(4096).decode()
-            time.sleep(0.1)
-            print(output)
+        output = ''
+        while True:
+            if self.shell.recv_ready():
+                output += self.shell.recv(4096).decode()
+                time.sleep(0.1)
+            else:
+                break
+
 
         # CLEAN THE OUTPUT
         output_lines = output.splitlines()
@@ -97,7 +104,7 @@ class ShowMainWindow(QDialog):
         # SET SHOW_OUTPUT AS THE OUTPUT OF THE SHELL
         self.show_output.setText(final_output)
 
-# app = QApplication(sys.argv)
-# window = ShowMainWindow()
-# window.show()
-# sys.exit(app.exec())
+app = QApplication(sys.argv)
+window = ShowMainWindow()
+window.show()
+sys.exit(app.exec())
