@@ -76,12 +76,17 @@ class ShowMainWindow(QDialog):
         self.shell.send(f'{show_item} show' + '\n')
 
         output = ''
+        marker = ">"
         while True:
             if self.shell.recv_ready():
                 output += self.shell.recv(4096).decode()
                 time.sleep(0.1)
+
+                lines = output.splitlines()
+                if lines and lines[-1].endswith(marker):
+                    break
             else:
-                break
+                time.sleep(0.1)
 
 
         # CLEAN THE OUTPUT
