@@ -69,6 +69,7 @@ class ShowMainWindow(QDialog):
 
         self.remove_job_button = QPushButton()
         self.remove_job_button.setVisible(False)
+        self.remove_job_button.clicked.connect(self.RemoveLightSchedule)
 
         fourth_row_layout.addWidget(self.remove_job_button)
         fourth_row_widget.setLayout(fourth_row_layout)
@@ -201,7 +202,7 @@ class ShowMainWindow(QDialog):
         for i in jobs:
             self.job_select_combo_box.addItem(i)
 
-        self.remove_job_button.clicked.connect(self.RemoveLightSchedule)
+
 
     def RemoveLightSchedule(self):
 
