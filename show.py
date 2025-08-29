@@ -106,25 +106,28 @@ class ShowMainWindow(QDialog):
         print('End Raw Output')
 
         # CLEAN THE OUTPUT
-        output_lines = []
-        for line in output.splitlines():
-            output_lines.append(line.rstrip())
-
-        last_seen_command_idx = 0
-        for i, line in enumerate(output_lines):
-            if full_command in line:
-                last_seen_command_idx = i + 1
-
-        if output_lines and marker in output_lines[-1]:
-            output_lines.pop()
-
-        cleaned_output = output_lines[last_seen_command_idx:]
-        cleaned_output = "\n".join(cleaned_output)
 
         # STRIP ANSI CODES
         ansi_codes = re.compile(r'(?:\x1B[@-_][0-?]*[ -/]*[@-~])')
-        final_output = ansi_codes.sub('', cleaned_output)
-        print(final_output)
+        stripped_output = ansi_codes.sub('', output)
+        print(f'Stripped output:\n {stripped_output}')
+
+        stripped_output_lines = []
+        for line in stripped_output.splitlines():
+            stripped_output_lines.append(line.rstrip())
+
+        last_seen_command_idx = 0
+        for i, line in enumerate(stripped_output_lines):
+            if full_command in line:
+                last_seen_command_idx = i + 1
+
+        if stripped_output_lines and marker in stripped_output_lines[-1]:
+            stripped_output_lines.pop()
+
+        stripped_output = stripped_output_lines[last_seen_command_idx:]
+        final_output = "\n".join(stripped_output)
+
+        print(f'Final output:\n {final_output}')
 
         # SET SHOW_OUTPUT AS THE OUTPUT OF THE SHELL
         self.show_output.setText(final_output)
