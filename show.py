@@ -106,10 +106,11 @@ class ShowMainWindow(QDialog):
         print('End Raw Output')
 
         # CLEAN THE OUTPUT
-        output_lines = output.rstrip().splitlines()
-        cleaned_output = []
-        last_seen_command_idx = 0
+        output_lines = []
+        for line in output.splitlines():
+            output_lines.append(line.rstrip())
 
+        last_seen_command_idx = 0
         for i, line in enumerate(output_lines):
             if full_command in line:
                 last_seen_command_idx = i + 1
