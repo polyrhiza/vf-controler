@@ -181,7 +181,7 @@ class ShowMainWindow(QDialog):
 
         jobs = []
         for line in lines:
-            match = re.match(r'^Job \d+', line)
+            match = re.match(r'^(Job \d+)', line)
             if match:
                 jobs.append(match.group(1))
 
