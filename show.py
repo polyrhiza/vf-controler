@@ -45,7 +45,7 @@ class ShowMainWindow(QDialog):
         #             THIRD ROW               #
         #######################################
 
-        # SECOND ROW IS IN MAIN LAYOUT AND IS THE TEXT OUTPUT
+        # SECOND ROW IS IN MAIN LAYOUT AND IS THE TEXT OUTPUT - I DONT KNOW WHY I DID THIS
 
         third_row_widget = QWidget()
         third_row_layout = QHBoxLayout()
@@ -60,7 +60,18 @@ class ShowMainWindow(QDialog):
         third_row_layout.addWidget(self.job_select_combo_box)
         third_row_widget.setLayout(third_row_layout)
 
+        #######################################
+        #             FOURTH ROW               #
+        #######################################
 
+        fourth_row_widget = QWidget()
+        fourth_row_layout = QHBoxLayout()
+
+        self.remove_job_button = QPushButton()
+        self.remove_job_button.setVisible(False)
+
+        fourth_row_layout.addWidget(self.remove_job_button)
+        fourth_row_widget.setLayout(fourth_row_layout)
 
         #######################################
         #            MAIN LAYOUT              #
@@ -76,6 +87,7 @@ class ShowMainWindow(QDialog):
         main_layout.addWidget(first_row_widget)
         main_layout.addWidget(self.show_output)
         main_layout.addWidget(third_row_widget)
+        main_layout.addWidget(fourth_row_widget)
         main_layout.addStretch(1)
 
         self.setLayout(main_layout)
@@ -169,13 +181,14 @@ class ShowMainWindow(QDialog):
 
         # SEND TO THE FUNCTION THAT REMOVES A JOB.
         if show_item == 'scheduler lights':
-            self.RemoveLightSchedule(output=final_output)
+            self.CaptureJobs(output=final_output)
 
-    def RemoveLightSchedule(self, output=None):
+    def CaptureJobs(self, output=None):
 
         # SETTING OPTIONS AS VISIBLE
         self.remove_schedule_text.setVisible(True)
         self.job_select_combo_box.setVisible(True)
+        self.remove_job_button.setVisible(True)
 
         lines = output.splitlines()
 
@@ -188,6 +201,18 @@ class ShowMainWindow(QDialog):
         for i in jobs:
             self.job_select_combo_box.addItem(i)
 
+        self.remove_job_button.clicked.connect(self.RemoveLightSchedule)
+
+    def RemoveLightSchedule(self):
+
+        job = self.job_select_combo_box.currentText()
+
+        job_match = re.match(r'^Job (\d+)', job)
+
+        if job_match:
+            job_id = job_match.group(1)
+
+        self.shell.send(f'scheduler lights remove {job_id}' + '\n')
 
 
 
