@@ -3,6 +3,7 @@ from PySide6.QtWidgets import (QDialog, QHBoxLayout, QVBoxLayout, QLabel, QAppli
                                QPushButton, QTextEdit)
 import time
 import re
+import string
 
 
 class ShowMainWindow(QDialog):
@@ -114,7 +115,14 @@ class ShowMainWindow(QDialog):
 
         stripped_output_lines = []
         for line in stripped_output.splitlines():
-            stripped_output_lines.append(line.rstrip())
+            cleaned_line = ''
+            for c in line:
+                if c in string.printable:
+                    cleaned_line += c
+                else:
+                    pass
+            cleaned_line = cleaned_line.rstrip()
+            stripped_output_lines.append(cleaned_line)
 
         last_seen_command_idx = 0
         for i, line in enumerate(stripped_output_lines):
