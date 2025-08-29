@@ -80,7 +80,6 @@ class ShowMainWindow(QDialog):
 
         output = ''
         marker = '>'
-        command_echoed = False
         start_time = time.time()
         timeout = 15
         quiet_period = 0.1
@@ -88,42 +87,35 @@ class ShowMainWindow(QDialog):
         full_command = f'{show_item} show'
 
         while True:
-            # Read everything currently available
             while self.shell.recv_ready():
-                chunk = self.shell.recv(4096).decode(errors='ignore')
-                output += chunk
+                output += self.shell.recv(4096).decode(errors='ignore')
                 last_recv_time = time.time()
-                time.sleep(0.01)
 
-            # Detect if the command has appeared in the output
-            if not command_echoed and full_command in output:
-                # Strip everything up to and including the echoed command
-                echo_index = output.find(full_command)
-                output = output[echo_index + len(full_command):]
-                command_echoed = True
-
-            # Break if prompt appears somewhere in output after command and quiet period passed
-            if command_echoed and marker in output:
-                if time.time() - last_recv_time > quiet_period:
-                    print(f'Found prompt after command')
-                    break
-
-            if time.time() - start_time > timeout:
-                print("Timeout waiting for shell")
+            if time.time() - last_recv_time > quiet_period:
+                print('No more data to recieve.')
                 break
 
-            time.sleep(0.05)
+            if time.time() - start_time > timeout:
+                print('Timeout waiting for shell')
+                print('Timeout output:\n', output)
+                break
+
+            time.sleep(0.1)
 
         print("Raw Output:\n", output)
         print('End Raw Output')
+
         # CLEAN THE OUTPUT
-        output_lines = output.splitlines()
+        output_lines = output.rstrip().splitlines()
         cleaned_output = []
         last_seen_command_idx = 0
 
         for i, line in enumerate(output_lines):
-            if show_item in line:
+            if full_command in line:
                 last_seen_command_idx = i + 1
+
+        if output_lines and marker in output_lines[-1]:
+            output_lines.pop()
 
         cleaned_output = output_lines[last_seen_command_idx:]
         cleaned_output = "\n".join(cleaned_output)
