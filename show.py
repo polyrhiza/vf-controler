@@ -1,6 +1,7 @@
 import sys
 from PySide6.QtWidgets import (QDialog, QHBoxLayout, QVBoxLayout, QLabel, QApplication, QComboBox, QWidget,
                                QPushButton, QTextEdit)
+from PySide6.QtGui import QFont
 import time
 import re
 import string
@@ -53,6 +54,9 @@ class ShowMainWindow(QDialog):
 
         self.show_output = QTextEdit()
         self.show_output.setReadOnly(True)
+        show_output_font = QFont('Courier')
+        show_output_font.setStyleHint(QFont.Monospace)
+        self.show_output.setFont(show_output_font)
 
         main_layout = QVBoxLayout()
         main_layout.addWidget(first_row_widget)
@@ -115,24 +119,39 @@ class ShowMainWindow(QDialog):
 
         stripped_output_lines = []
         for line in stripped_output.splitlines():
-            cleaned_line = ''
-            for c in line:
-                if c in string.printable:
-                    cleaned_line += c
-                else:
-                    pass
-            cleaned_line = cleaned_line.rstrip()
-            stripped_output_lines.append(cleaned_line)
+            stripped_line = line.rstrip()
+            stripped_output_lines.append(stripped_line)
+
+
+        # for line in stripped_output.splitlines():
+        #     cleaned_line = ''
+        #     for c in line:
+        #         if c in string.printable:
+        #             cleaned_line += c
+        #         else:
+        #             pass
+        #     cleaned_line = cleaned_line.rstrip()
+        #     stripped_output_lines.append(cleaned_line)
 
         last_seen_command_idx = 0
         for i, line in enumerate(stripped_output_lines):
             if full_command in line:
                 last_seen_command_idx = i + 1
 
-        if stripped_output_lines and marker in stripped_output_lines[-1]:
-            stripped_output_lines.pop()
-
         stripped_output = stripped_output_lines[last_seen_command_idx:]
+
+        last_seen_marker = 0
+        for i, line in enumerate(stripped_output):
+            if marker in line:
+                last_seen_marker = i
+
+        stripped_output = stripped_output[:last_seen_marker]
+
+
+        # if stripped_output and marker in stripped_output_lines:
+        #     stripped_output_lines.pop()
+
+        # stripped_output = stripped_output_lines[last_seen_command_idx:]
         final_output = "\n".join(stripped_output)
 
         print(f'Final output:\n {final_output}')
