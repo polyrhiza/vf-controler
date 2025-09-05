@@ -41,9 +41,11 @@ class OverrideLights(QDialog):
         self.input_output_combo_box = QComboBox()
         self.input_output_combo_box.addItem('Output')
         self.input_output_combo_box.addItem('Input')
+        self.input_output_combo_box.addItem('Demo Mode')
         self.input_output_combo_box.currentTextChanged.connect(self.UpdateSpinboxText)
 
         # SELECT CANAL COMBO BOX
+        self.canal_label = QLabel('For Canal:')
         self.canal_combo_box = QComboBox()
         self.canal_combo_box.addItem('1.1')
         self.canal_combo_box.addItem('1.2')
@@ -62,7 +64,7 @@ class OverrideLights(QDialog):
         input_output_layout = QHBoxLayout()
         input_output_layout.addWidget(QLabel('Calculate Input or Output:'))
         input_output_layout.addWidget(self.input_output_combo_box)
-        input_output_layout.addWidget(QLabel('For Canal:'))
+        input_output_layout.addWidget(self.canal_label)
         input_output_layout.addWidget(self.canal_combo_box)
         input_output_layout.addStretch(1)
 
@@ -77,32 +79,36 @@ class OverrideLights(QDialog):
         self.blue_input = QDoubleSpinBox()
         self.blue_input.setSingleStep(1.0)
         self.blue_input.setMaximum(255.0)
+        self.blue_label = QLabel('Blue:')
 
         self.green_input = QDoubleSpinBox()
         self.green_input.setSingleStep(1.0)
         self.green_input.setMaximum(255.0)
+        self.green_label = QLabel('Green:')
 
         self.red_input = QDoubleSpinBox()
         self.red_input.setSingleStep(1.0)
         self.red_input.setMaximum(255.0)
+        self.red_label = QLabel('Red:')
 
         self.fr_input = QDoubleSpinBox()
         self.fr_input.setSingleStep(1.0)
         self.fr_input.setMaximum(255.0)
+        self.fr_label = QLabel('Far Red:')
 
-        set_button = QPushButton('Set')
-        set_button.clicked.connect(self.calculate)
+        self.set_button = QPushButton('Set')
+        self.set_button.clicked.connect(self.calculate)
 
         light_channel_input_layout = QHBoxLayout()
-        light_channel_input_layout.addWidget(QLabel('Blue:'))
+        light_channel_input_layout.addWidget(self.blue_label)
         light_channel_input_layout.addWidget(self.blue_input)
-        light_channel_input_layout.addWidget(QLabel('Green:'))
+        light_channel_input_layout.addWidget(self.green_label)
         light_channel_input_layout.addWidget(self.green_input)
-        light_channel_input_layout.addWidget(QLabel('Red:'))
+        light_channel_input_layout.addWidget(self.red_label)
         light_channel_input_layout.addWidget(self.red_input)
-        light_channel_input_layout.addWidget(QLabel('Far Red:'))
+        light_channel_input_layout.addWidget(self.fr_label)
         light_channel_input_layout.addWidget(self.fr_input)
-        light_channel_input_layout.addWidget(set_button)
+        light_channel_input_layout.addWidget(self.set_button)
 
         light_channel_input_widget.setLayout(light_channel_input_layout)
 
@@ -169,6 +175,28 @@ class OverrideLights(QDialog):
 
         if text == 'Output':
             self.input_output_changeable_label.setText('Enter Inputs (Hex):')
+
+            self.input_output_changeable_label.setVisible(True)
+
+            self.canal_label.setVisible(True)
+            self.canal_combo_box.setVisible(True)
+
+            self.blue_label.setVisible(True)
+            self.green_label.setVisible(True)
+            self.red_label.setVisible(True)
+            self.fr_label.setVisible(True)
+
+            self.blue_input.setVisible(True)
+            self.green_input.setVisible(True)
+            self.red_input.setVisible(True)
+            self.fr_input.setVisible(True)
+
+            self.set_button.setVisible(True)
+
+            self.set_override_button.setVisible(False)
+            self.clear_override_button.setVisible(False)
+
+
             self.blue_input.setMaximum(255.0)
             self.green_input.setMaximum(255.0)
             self.red_input.setMaximum(255.0)
@@ -176,12 +204,64 @@ class OverrideLights(QDialog):
 
         # HAVE TO FIGURE OUT A WAY TO RETRIEVE THE MAX POSSIBLE LIGHT.
         # DEPENDS ON LIGHT LEAKAGE. SETTING TO 200 FOR NOW.
-        if text == 'Input':
+        elif text == 'Input':
             self.input_output_changeable_label.setText('Enter Outputs (PFD):')
+
+            self.input_output_changeable_label.setVisible(True)
+
+            self.canal_label.setVisible(True)
+            self.canal_combo_box.setVisible(True)
+
+            self.blue_label.setVisible(True)
+            self.green_label.setVisible(True)
+            self.red_label.setVisible(True)
+            self.fr_label.setVisible(True)
+
+            self.blue_input.setVisible(True)
+            self.green_input.setVisible(True)
+            self.red_input.setVisible(True)
+            self.fr_input.setVisible(True)
+
+            self.set_button.setVisible(True)
+
+            self.set_override_button.setVisible(False)
+            self.clear_override_button.setVisible(False)
+
+
             self.blue_input.setMaximum(200.0)
             self.green_input.setMaximum(200.0)
             self.red_input.setMaximum(200.0)
             self.fr_input.setMaximum(200.0)
+
+        elif text == 'Demo Mode':
+            self.input_output_changeable_label.setVisible(False)
+
+            self.canal_label.setVisible(False)
+            self.canal_combo_box.setVisible(False)
+
+            self.blue_label.setVisible(False)
+            self.green_label.setVisible(False)
+            self.red_label.setVisible(False)
+            self.fr_label.setVisible(False)
+
+            self.blue_input.setVisible(False)
+            self.green_input.setVisible(False)
+            self.red_input.setVisible(False)
+            self.fr_input.setVisible(False)
+
+            self.set_button.setVisible(False)
+
+            self.blue_text.setText('')
+            self.green_text.setText('')
+            self.red_text.setText('')
+            self.fr_text.setText('')
+
+
+            self.set_override_button.setVisible(True)
+            self.clear_override_button.setVisible(True)
+
+
+
 
 
     def calculate(self):
@@ -245,6 +325,9 @@ class OverrideLights(QDialog):
 
     def Override(self, shell=None, blue=None, green=None, red=None, fr=None, canal=None):
 
+        # if self.input_output_combo_box.currentText == 'Demo Mode':
+        #     shell.send(f'lights demo')
+
         shell.send(f'lights override-set {canal} [{int(red)},{int(green)},{int(blue)},{int(fr)}, 0]' + '\n')
 
         if self.shell.recv_ready():
@@ -255,7 +338,7 @@ class OverrideLights(QDialog):
 
         shell.send(f'lights override-clear {canal}' + '\n')
 
-# app = QApplication(sys.argv)
-# window = OverrideLights()
-# window.show()
-# sys.exit(app.exec())
+app = QApplication(sys.argv)
+window = OverrideLights()
+window.show()
+sys.exit(app.exec())
